@@ -1,0 +1,15 @@
+name: 'Workflow Status Action'
+description: 'Trigger events like notifications or alerts using the workflow status'
+author: 'David Boenig <martialonline>'
+
+outputs:
+  status:
+    description: 'Returns either success or failed as workflow status'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    DOCKER_BUILDKIT: '1'
+branding:
+  icon: check-square
+  color: gray-dark

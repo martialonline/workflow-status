@@ -1,0 +1,47 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Build action
+        run: make build.docker VERSION=${{ github.sha }}
+
+  test:
+    name: Test-Script
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Test Script
+        run: make test.shell
+
+  test-action:
+    name: Test-Action
+    runs-on: ubuntu-18.04
+    needs: [build, test]
+    continue-on-error: true
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Test Action
+        id: test
+        uses: ./
+      - name: Get Test Output
+        run: echo "Workflow Status '${{ steps.test.outputs.status }}'"
