@@ -1,7 +1,7 @@
 ![Tests](https://github.com/martialonline/workflow-status/workflows/Tests/badge.svg)
 ## Workflow Status Action
 
-Use this action to trigger events such as notifications or alerts at the end of the workflow. This makes it possible to send catch-all notifications.
+Use this action to trigger events such as notifications or alerts at the end of your workflow. This makes it possible to send catch-all notifications.
 
 ### Outputs
 
@@ -9,7 +9,7 @@ Use this action to trigger events such as notifications or alerts at the end of 
 
 ### Example usage
 
-Simply add an additional job to the end of the workflow and list the job dependencies within `needs`. Then add a step within that job including a condition to trigger an even like a Slack notification or similar.
+Simply add a job to the end of your workflow and list the last job as dependency using `needs`. Then add a step within that job including a condition to trigger an event like a Slack notification or similar.
 
 ```yaml
 ...
@@ -25,10 +25,12 @@ Simply add an additional job to the end of the workflow and list the job depende
         if: contains(steps.check.outputs.status, 'failed')
 ```
 
-### Full Example
+### Full Example (Slack Notification)
+
+This is a full example using the Workflow Status Action to trigger a Slack notification, if any of the jobs or steps have failed.
 
 ```yaml
-name: Full Example
+name: Slack Example
 
 on:
   push:
@@ -36,6 +38,15 @@ on:
       - master
 
 jobs:
+
+  test:
+    name: Test
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Unit Tests
+        run: go test ./...
 
   build:
     name: Build
@@ -54,8 +65,12 @@ jobs:
     steps: 
       - uses: martialonline/workflow-status@v1
         id: check
-      - run: echo "Some steps have failed, trigger alert"
+      - uses: 8398a7/action-slack@v3
         if: contains(steps.check.outputs.status, 'failed')
+        with:
+          text: 'Workflow run has failed!'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 
 ### License
