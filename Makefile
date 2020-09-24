@@ -1,6 +1,6 @@
 VERSION ?= latest
 TAG ?= $(VERSION)
-PREFIX ?= workflow-failure
+PREFIX ?= workflow-status
 
 GIT_COMMIT = $(shell git rev-parse --short HEAD)
 
