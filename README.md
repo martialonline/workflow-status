@@ -31,7 +31,7 @@ Simply add a job to the end of your workflow and list the last job as dependency
 
 ### Full Example (Slack Notification)
 
-This is a full example using the Workflow Status Action to trigger a Slack notification at the end of the run.
+This is a full example using the Workflow Status Action to trigger a Slack notification at the end of the run. The condition is optional, which in this case triggers a Slack nofication for either `success`, `failure` or `cancelled` status.
 
 ```yaml
 name: Slack Example
