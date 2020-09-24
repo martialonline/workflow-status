@@ -5,7 +5,7 @@ Use this action to trigger events such as notifications or alerts at the end of 
 
 ### Outputs
 
-* `status` - Returns either `success` or `failed`.
+* `status` - Returns either `success`, `cancelled` or `failure`.
 
 ### Example usage
 
@@ -21,13 +21,17 @@ Simply add a job to the end of your workflow and list the last job as dependency
     steps: 
       - uses: martialonline/workflow-status@v1
         id: check
-      - run: echo "Some steps have failed, trigger alert"
-        if: contains(steps.check.outputs.status, 'failed')
+      - run: echo "Workflow failed"
+        if: steps.check.outputs.status == 'failure'
+      - run: echo "Workflow was cancelled"
+        if: steps.check.outputs.status == 'cancelled'
+      - run: echo "Workflow was successful"
+        if: steps.check.outputs.status == 'success'
 ```
 
 ### Full Example (Slack Notification)
 
-This is a full example using the Workflow Status Action to trigger a Slack notification, if any of the jobs or steps have failed.
+This is a full example using the Workflow Status Action to trigger a Slack notification at the end of the run. The condition is optional, which in this case triggers a Slack nofication for either `success`, `failure` or `cancelled` status.
 
 ```yaml
 name: Slack Example
@@ -66,9 +70,8 @@ jobs:
       - uses: martialonline/workflow-status@v1
         id: check
       - uses: 8398a7/action-slack@v3
-        if: contains(steps.check.outputs.status, 'failed')
         with:
-          text: 'Workflow run has failed!'
+          status: ${{ steps.check.outputs.status }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
