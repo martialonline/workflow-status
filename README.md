@@ -19,7 +19,7 @@ Simply add a job to the end of your workflow and list the last job as dependency
     needs: [build]
     if: always()
     steps: 
-      - uses: martialonline/workflow-status@v1
+      - uses: martialonline/workflow-status@v2
         id: check
       - run: echo "Workflow failed"
         if: steps.check.outputs.status == 'failure'
@@ -67,7 +67,7 @@ jobs:
     needs: [build]
     if: always()
     steps: 
-      - uses: martialonline/workflow-status@v1
+      - uses: martialonline/workflow-status@v2
         id: check
       - uses: 8398a7/action-slack@v3
         with:
