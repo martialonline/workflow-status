@@ -2,6 +2,11 @@ name: "Workflow Status Action"
 description: "Trigger events like notifications or alerts using the workflow status"
 author: "David Boenig <martialonline>"
 
+inputs:
+  token:
+    description: "The GITHUB_TOKEN secret"
+    required: true
+
 outputs:
   status:
     description: "Returns either success or failed as workflow status"
@@ -15,11 +20,11 @@ runs:
         repo="${GITHUB_REPOSITORY}"
         run_id="${GITHUB_RUN_ID}"
 
-        failure=$(curl -s "${url}/${repo}/actions/runs/${run_id}/jobs" | \
+        failure=$(curl -s -H 'authorization: Bearer ${{ inputs.token }}' -H 'content-type: application/json' "${url}/${repo}/actions/runs/${run_id}/jobs" | \
         jq -r '.jobs[] | select(.status == "completed" and .conclusion == "failure").conclusion' | \
         wc -l)
 
-        cancelled=$(curl -s "${url}/${repo}/actions/runs/${run_id}/jobs" | \
+        cancelled=$(curl -s -H 'authorization: Bearer ${{ inputs.token }}' -H 'content-type: application/json' "${url}/${repo}/actions/runs/${run_id}/jobs" | \
         jq -r '.jobs[] | select(.status == "completed" and .conclusion == "cancelled").conclusion' | \
         wc -l)
 
@@ -30,7 +35,7 @@ runs:
         else 
           status="success"
         fi
-        
+
         echo "::set-output name=status::${status}"
       shell: bash
 branding:
