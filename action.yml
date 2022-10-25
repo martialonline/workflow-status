@@ -31,8 +31,8 @@ runs:
         else 
           status="success"
         fi
-        
-        echo "::set-output name=status::${status}"
+
+        echo "{name}=${status}" >> $GITHUB_OUTPUT"
       shell: bash
 branding:
   icon: check-square
