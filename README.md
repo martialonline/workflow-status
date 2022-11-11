@@ -1,4 +1,5 @@
 ![Tests](https://github.com/martialonline/workflow-status/workflows/Tests/badge.svg)
+
 ## Workflow Status Action
 
 Use this action to trigger events such as notifications or alerts at the end of your workflow. This makes it possible to send catch-all notifications.
@@ -15,11 +16,11 @@ Simply add a job to the end of your workflow and list the last job as dependency
 ...
   notification:
     name: Notify
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: [build]
     if: always()
-    steps: 
-      - uses: martialonline/workflow-status@v2
+    steps:
+      - uses: martialonline/workflow-status@v3
         id: check
       - run: echo "Workflow failed"
         if: steps.check.outputs.status == 'failure'
@@ -45,29 +46,29 @@ jobs:
 
   test:
     name: Test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Unit Tests
         run: go test ./...
 
   build:
     name: Build
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build
         run: docker build -t example:latest .
 
   notification:
     name: Notify
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: [build]
     if: always()
-    steps: 
-      - uses: martialonline/workflow-status@v2
+    steps:
+      - uses: martialonline/workflow-status@v3
         id: check
       - uses: 8398a7/action-slack@v3
         with:
@@ -77,4 +78,5 @@ jobs:
 ```
 
 ### License
+
 The Dockerfile and associated scripts and documentation in this project are released under the [MIT](license).
