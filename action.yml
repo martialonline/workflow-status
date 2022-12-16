@@ -32,7 +32,7 @@ runs:
           status="success"
         fi
 
-        echo "{status}=${status}" >> $GITHUB_OUTPUT
+        echo "status=${status}" >> $GITHUB_OUTPUT
       shell: bash
 branding:
   icon: check-square
