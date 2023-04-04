@@ -8,6 +8,12 @@ Use this action to trigger events such as notifications or alerts at the end of 
 
 * `status` - Returns either `success`, `cancelled` or `failure`.
 
+### Required permissions
+```yaml
+permissions:
+  actions: read
+```
+
 ### Example usage
 
 Simply add a job to the end of your workflow and list the last job as dependency using `needs`. Then add a step within that job including a condition to trigger an event like a Slack notification or similar.
@@ -41,6 +47,9 @@ on:
   push:
     branches:
       - master
+
+permissions:
+  actions: read
 
 jobs:
 
