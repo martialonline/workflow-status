@@ -16,11 +16,11 @@ runs:
         run_id="${GITHUB_RUN_ID}"
         token="${{ github.token }}"
 
-        failure=$(curl -s -H "Authorization: token ${token}" "${url}/${repo}/actions/runs/${run_id}/jobs" | \
+        failure=$(curl -s -H "Authorization: token ${token}" "${url}/${repo}/actions/runs/${run_id}/jobs?per_page=100" | \
         jq -r '.jobs[] | select(.status == "completed" and .conclusion == "failure").conclusion' | \
         wc -l)
 
-        cancelled=$(curl -s -H "Authorization: token ${token}" "${url}/${repo}/actions/runs/${run_id}/jobs" | \
+        cancelled=$(curl -s -H "Authorization: token ${token}" "${url}/${repo}/actions/runs/${run_id}/jobs?per_page=100" | \
         jq -r '.jobs[] | select(.status == "completed" and .conclusion == "cancelled").conclusion' | \
         wc -l)
 
